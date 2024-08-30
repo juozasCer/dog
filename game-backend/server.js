@@ -1,15 +1,16 @@
-// api/index.js
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+
 const app = express();
+const port = 5000;
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB Atlas
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect('mongodb+srv://cerjuozas:c3fjrfoqvHkYYxjx@cluster1.lsiee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -52,5 +53,6 @@ app.post('/leaderboard', async (req, res) => {
   }
 });
 
-// Export the serverless function
-module.exports = app;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
