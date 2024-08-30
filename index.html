@@ -150,7 +150,7 @@
     const API_URL = 'https://dog-blush-six.vercel.app'; // Your backend URL
 
     async function fetchLeaderboard() {
-      try {
+    try {
         const response = await fetch(`${API_URL}/leaderboard`);
         if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
@@ -158,18 +158,20 @@
         const tableBody = document.querySelector('#leaderboard tbody');
         tableBody.innerHTML = ''; // Clear existing content
 
-        data.forEach(player => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${player.name}</td>
-            <td>${player.score}</td>
-          `;
-          tableBody.appendChild(row);
+        data.forEach((player, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td> <!-- Rank -->
+                <td>${player.name}</td> <!-- Name -->
+                <td>${player.score}</td> <!-- Score -->
+            `;
+            tableBody.appendChild(row);
         });
-      } catch (error) {
+    } catch (error) {
         console.error('Fetch error:', error);
-      }
     }
+}
+
 
     // Fetch leaderboard data on page load
     document.addEventListener('DOMContentLoaded', fetchLeaderboard);
