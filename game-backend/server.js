@@ -7,9 +7,11 @@ const app = express();
 const port = process.env.PORT || 5000; // Use PORT from .env or default to 5000
 
 // Middleware
+const cors = require('cors');
 app.use(cors({
-  origin: 'https://dog-blush-six.vercel.app', // Your Vercel URL
+  origin: 'https://dog-blush-six.vercel.app', // Your frontend URL
 }));
+
 app.use(express.json());
 
 // Connect to MongoDB Atlas
