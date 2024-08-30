@@ -6,19 +6,20 @@
   overflow: hidden;
   border-radius: 20px; /* Rounded corners */
   background-image: url('/images/GAMEBG.png'); /* Path to your background image */
-  background-size: cover; /* Cover the entire area */
-  animation: scrollBackground 1s linear infinite; /* Add scrolling animation */
+  background-size: auto 540px; /* Ensure background is sized for scrolling */
+  animation: scrollBackground 10ms linear infinite; /* Adjust duration as needed */
 }
 
 /* Keyframes for scrolling the background image downwards */
 @keyframes scrollBackground {
   from {
-    background-position: 0 1080px;
+    background-position: 0 0;
   }
   to {
-    background-position: 0 -1080px;
+    background-position: 0 540px; /* Move through the entire background height */
   }
 }
+
 
 #player {
   position: absolute;
