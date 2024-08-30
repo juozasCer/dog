@@ -7,16 +7,16 @@
   border-radius: 20px; /* Rounded corners */
   background-image: url('/images/GAMEBG.png'); /* Path to your background image */
   background-size: cover; /* Cover the entire area */
-  animation: scrollBackground 10s linear infinite; /* Add scrolling animation */
+  animation: scrollBackground 1s linear infinite; /* Add scrolling animation */
 }
 
 /* Keyframes for scrolling the background image downwards */
 @keyframes scrollBackground {
   from {
-    background-position: 0 0;
+    background-position: 0 -1080px;
   }
   to {
-    background-position: 0 -1000%;
+    background-position: 0 1080px;
   }
 }
 

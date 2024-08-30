@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Mainfont';
-  src: url('/fonts/Caliny-Medium-DEMO.otf') format('opentype');
+  src: url('/fonts/CalinyMedium.otf') format('opentype');
   font-weight: normal; /* You can specify if it's normal or bold */
   font-style: normal;  /* You can specify if it's normal or italic */
 }
