@@ -4,10 +4,15 @@ const player = document.getElementById('player');
 const startButton = document.getElementById('startButton');
 const gameOverText = document.getElementById('gameOverText');
 const scoreDisplay = document.getElementById('score'); // Score display element
+const nameInputSection = document.getElementById('nameInputSection');
+const playerNameInput = document.getElementById('playerName');
+const setNameButton = document.getElementById('setNameButton');
+const leaderboardTable = document.querySelector('#leaderboard tbody');
 
 let gameInterval;
 let isGameOver = false;
 let score = 0; // Initialize score
+let playerName = ''; // Player name variable
 
 // Initial player position
 let playerPosition = gameArea.clientWidth / 2 - player.clientWidth / 2;
@@ -61,8 +66,6 @@ function createFallingBlock() {
     gameArea.appendChild(block);
 }
 
-
-
 // Function to update the position of falling blocks and check for collisions
 function updateFallingBlocks() {
     const blocks = document.querySelectorAll('.falling-block');
@@ -109,17 +112,20 @@ function gameLoop() {
 function gameOver() {
     isGameOver = true;
     clearInterval(gameInterval);
-
+  
     // Show the Game Over text
     gameOverText.style.display = 'block';
-
+  
     // Remove all falling blocks
     document.querySelectorAll('.falling-block').forEach(block => block.remove());
-
+  
     // Hide Game Over text after 2 seconds and show the start button
     setTimeout(() => {
-        gameOverText.style.display = 'none';
-        startButton.style.display = 'block';
+      gameOverText.style.display = 'none';
+      startButton.style.display = 'block';
+      
+      // Submit the score with the player's name
+      submitScore(playerName, score);
     }, 2000);
 }
 
@@ -138,12 +144,23 @@ function movePlayerWithMouse(event) {
     player.style.left = `${playerPosition}px`;
 }
 
-
 // Attach event listener for mouse movement within the game area
 gameArea.addEventListener('mousemove', movePlayerWithMouse);
 
 // Attach event listener to the start button
 startButton.addEventListener('click', startGame);
+
+// Attach event listener to the set name button
+setNameButton.addEventListener('click', () => {
+    playerName = playerNameInput.value.trim();
+    if (playerName) {
+        nameInputSection.style.display = 'none'; // Hide the name input section after setting the name
+        startButton.style.display = 'block'; // Show the start button
+        fetchLeaderboard(); // Fetch leaderboard when name is set
+    } else {
+        alert('Please enter a valid name');
+    }
+});
 
 // Function to adjust background scroll speed
 function adjustBackgroundScrollSpeed(speed) {
@@ -153,3 +170,43 @@ function adjustBackgroundScrollSpeed(speed) {
 
 // Example of adjusting speed (optional)
 adjustBackgroundScrollSpeed(10); // 10 seconds for a full loop
+
+// Function to submit the score to the server
+function submitScore(name, score) {
+    fetch('http://localhost:5000/leaderboard', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, score })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Score submitted:', data);
+        fetchLeaderboard(); // Fetch leaderboard after submitting the score
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to fetch the leaderboard data and update the UI
+function fetchLeaderboard() {
+    fetch('http://localhost:5000/leaderboard')
+        .then(response => response.json())
+        .then(data => {
+            leaderboardTable.innerHTML = ''; // Clear existing entries
+
+            data.forEach((player, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.name}</td>
+                    <td>${player.score}</td>
+                `;
+                leaderboardTable.appendChild(row);
+            });
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+// Fetch leaderboard data when the page loads
+window.addEventListener('load', fetchLeaderboard);
