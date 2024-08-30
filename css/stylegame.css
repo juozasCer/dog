@@ -13,10 +13,10 @@
 /* Keyframes for scrolling the background image downwards */
 @keyframes scrollBackground {
   from {
-    background-position: 0 -1080px;
+    background-position: 0 1080px;
   }
   to {
-    background-position: 0 1080px;
+    background-position: 0 -1080px;
   }
 }
 
