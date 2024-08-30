@@ -1,0 +1,339 @@
+@font-face {
+  font-family: 'Mainfont';
+  src: url('/fonts/Caliny-Medium-DEMO.otf') format('opentype');
+  font-weight: normal; /* You can specify if it's normal or bold */
+  font-style: normal;  /* You can specify if it's normal or italic */
+}
+
+/* Reset some default browser styling */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Mainfont', sans-serif;
+  scroll-behavior: smooth; /* Smooth scrolling for in-page links */
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+}
+
+/* Header styles */
+header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  /* background-color: #333; */
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  z-index: 1000;
+  display: flex;
+  justify-content: center; /* Center all content */
+  align-items: center;
+}
+
+/* Navigation links in the header */
+.nav-links {
+  display: flex;
+  flex-grow: 1;
+  justify-content: center; /* Center links horizontally */
+  margin: 0;
+}
+
+.nav-links a {
+  color: white;
+  margin: 0 15px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Header buttons container */
+.header-buttons {
+  display: flex;
+  margin-left: auto; /* Pushes buttons to the right */
+}
+
+/* Styles for header buttons */
+/* Styles for header buttons */
+.header-button {
+  position: relative;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2); /* Gradient from top-right to bottom-left */
+  border: none;
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer;
+  padding: 8px; /* Adjusted padding for button */
+  margin: 0 5px; /* Space between buttons */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white; /* Text color to contrast with the gradient */
+  overflow: hidden;
+  width: 40px; /* Set a fixed width for the button */
+  height: 40px; /* Set a fixed height for the button */
+}
+
+.header-button::before {
+  content: '';
+  position: absolute;
+  width: 24px; /* Adjust size according to your icon */
+  height: 24px;
+  background-size: cover;
+  background-position: center;
+}
+
+.header-button.twitter-hover::before {
+  background-image: url('/images/twitter1.svg');
+}
+
+.header-button.telegram-hover::before {
+  background-image: url('/images/telegram1.svg');
+}
+
+.header-button:hover.twitter-hover::before {
+  background-image: url('/images/twitter.svg');
+}
+
+.header-button:hover.telegram-hover::before {
+  background-image: url('/images/telegram.svg');
+}
+
+
+
+/* Styles for each section */
+.section {
+  position: relative; /* Ensure positioning context for children */
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-sizing: border-box;
+  padding: 20px;
+  z-index: 0;
+}
+
+/* Styles for the video background */
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: -1; /* Place video behind other content */
+}
+
+.video-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the entire section */
+}
+
+/* Existing styles for other elements */
+.logo {
+  font-size: 150px; /* Adjust font size as needed */
+  margin-bottom: 20px; /* Space between logo and content */
+  color: white; /* Main text color */
+  display: inline-block;
+  text-align: center;
+  line-height: 0.85; /* Adjust line height if needed */
+  letter-spacing: -5px; /* Adjust spacing between letters */
+  font-weight: 400; /* Normal weight or adjust as needed */
+  text-shadow:
+  -4px -4px 0 #000,  
+     4px -4px 0 #000,
+    -4px  4px 0 #000,
+     4px  4px 0 #000, /* Four directions for thicker outline */
+    -4px  0 0 #000,  
+     4px  0 0 #000,
+     0 -4px 0 #000,
+     0  4px 0 #000; /* Thinner black outline effect */
+}
+
+/* Centering the content within the section */
+.content {
+  bottom:-50px;
+  z-index: 2;
+  text-align: center;
+  position: relative; /* To position child elements */
+  color: white; /* Ensure text is visible over video */
+  width: 100%; /* Ensure full width */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center items horizontally */
+  justify-content: center; /* Center items vertically */
+}
+
+
+.contact-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px; /* Space above the contact-container */
+}
+
+.contact-info {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2);
+  padding: 10px;
+  border-radius: 10px; /* Rounded corners */
+  border: 1px solid #ccc;
+  position: relative;
+  max-width: 60vw; /* Adjust width to fit the content */
+  box-sizing: border-box; /* Ensures padding is included in width */
+}
+
+.contact-info span {
+  margin-right: 40px; /* Space between text and button */
+}
+
+/* Styles for copy button */
+.copy-button {
+  position: relative;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2); /* Gradient background */
+  border: none;
+  border-radius: 10px; /* Rounded corners */
+  cursor: pointer;
+  padding: 8px; /* Adjusted padding for button */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  width: 40px; /* Set a fixed width for the button */
+  height: 40px; /* Set a fixed height for the button */
+}
+
+/* Using pseudo-element to display the icon */
+.copy-button::before {
+  content: '';
+  position: absolute;
+  width: 24px; /* Adjust size according to your icon */
+  height: 24px;
+  background-size: cover;
+  background-position: center;
+}
+
+/* Default icon for copy button */
+.copy-button::before {
+  background-image: url('/images/copy.svg');
+}
+
+/* Hover state icon for copy button */
+.copy-button:hover::before {
+  background-image: url('/images/copy1.svg');
+}
+
+
+.contact-button {
+  display: inline-block;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2);
+  color: white;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  border: none;
+  border-radius: 10px; /* Rounded corners */
+  text-decoration: none;
+  cursor: pointer;
+  margin-top: 10px; /* Space above the button */
+}
+
+.contact-button:hover {
+  background-color: #0c0; /* Darker green on hover */
+}
+
+/* Different background colors for each section */
+.section:nth-child(odd) {
+  background-color: #f4f4f4;
+}
+
+.section:nth-child(even) {
+  z-index: 1;
+  background-color: #ddd;
+}
+
+.separator {
+  height: 101px; /* Adjust height based on your image */
+  width: 100%; /* Full width of the container */
+  background-image: url("/images/separator2.png"); /* URL of your separator image */
+  background-size: auto 100%; /* Make sure the height is consistent, width auto adjusts */
+  background-repeat: repeat-x; /* Repeat the image horizontally */
+  background-position: 0 0; /* Start positioning from the top left corner */
+  position: relative; /* Position context for animation */
+  overflow: hidden; /* Hide any overflow */
+  animation: moveSeparator 10s linear infinite; /* Apply the animation */
+}
+
+@keyframes moveSeparator {
+  from {
+    background-position: 0 0; /* Start position */
+  }
+  to {
+    background-position: 100% 0; /* End position */
+  }
+}
+
+/* Styles for Section 2 background image */
+#section2 {
+  position: relative; /* Ensure positioning context for children */
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-sizing: border-box;
+  padding: 20px;
+  z-index: 0;
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/GAMEBACKGROUND.png'); /* URL of your background image */
+  background-size: cover; /* Ensure the image covers the section */
+  background-position: center; /* Center the image */
+  background-repeat: no-repeat; /* Prevent the image from repeating */
+  z-index: -1; /* Place the background image behind other content */
+}
+
+/* Other general styles */
+/* Styles for the text above the game area */
+.above-game-area {
+  position: absolute; /* Positioning context */
+  top: 5%; /* Adjust based on how far down you want the text to be */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Center horizontally */
+  text-align: center;
+  width: 100%; /* Full width */
+  z-index: 1; /* Ensure it's above other content */
+}
+
+.above-game-text {
+  font-size: 90px; /* Adjust size as needed */
+  color: white; /* Main text color */
+  line-height: 1; /* Adjust line height for spacing */
+  text-shadow:
+    -4px -4px 0 #000,  
+     4px -4px 0 #000,
+    -4px  4px 0 #000,
+     4px  4px 0 #000, /* Four directions for thicker outline */
+    -4px  0 0 #000,  
+     4px  0 0 #000,
+     0 -4px 0 #000,
+     0  4px 0 #000; /* Thinner black outline effect */
+  font-weight: 400; /* Normal weight or adjust as needed */
+}
+
+
+/* Footer styles */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2);
+  color: white;
+  /* position: fixed; */
+  bottom: 0;
+  width: 100%;
+}
+
+ 
