@@ -173,7 +173,7 @@ adjustBackgroundScrollSpeed(10); // 10 seconds for a full loop
 
 // Function to submit the score to the server
 function submitScore(name, score) {
-    fetch('http://localhost:5000/leaderboard', {
+    fetch('https://dog-blush-six.vercel.app/leaderboard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -190,7 +190,7 @@ function submitScore(name, score) {
 
 // Function to fetch the leaderboard data and update the UI
 function fetchLeaderboard() {
-    fetch('http://localhost:5000/leaderboard')
+    fetch('https://dog-blush-six.vercel.app/leaderboard')
         .then(response => response.json())
         .then(data => {
             leaderboardTable.innerHTML = ''; // Clear existing entries
