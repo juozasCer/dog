@@ -171,42 +171,50 @@ function adjustBackgroundScrollSpeed(speed) {
 // Example of adjusting speed (optional)
 adjustBackgroundScrollSpeed(10); // 10 seconds for a full loop
 
-// Function to submit the score to the server
-function submitScore(name, score) {
-    fetch('http://localhost:5000/leaderboard', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, score })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Score submitted:', data);
-        fetchLeaderboard(); // Fetch leaderboard after submitting the score
-    })
-    .catch(error => console.error('Error:', error));
+// Replace with your actual backend URL
+const API_URL = 'https://dog-blush-six.vercel.app';
+
+async function fetchLeaderboard() {
+    try {
+        const response = await fetch(`${API_URL}/leaderboard`);
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        
+        const tableBody = document.querySelector('#leaderboard tbody');
+        tableBody.innerHTML = ''; // Clear existing content
+
+        data.forEach((player, index) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${index + 1}</td> <!-- Rank -->
+                <td>${player.name}</td> <!-- Name -->
+                <td>${player.score}</td> <!-- Score -->
+            `;
+            tableBody.appendChild(row);
+        });
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
 }
 
-// Function to fetch the leaderboard data and update the UI
-function fetchLeaderboard() {
-    fetch('http://localhost:5000/leaderboard')
-        .then(response => response.json())
-        .then(data => {
-            leaderboardTable.innerHTML = ''; // Clear existing entries
-
-            data.forEach((player, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${player.name}</td>
-                    <td>${player.score}</td>
-                `;
-                leaderboardTable.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error:', error));
+async function submitScore(name, score) {
+    try {
+        const response = await fetch(`${API_URL}/leaderboard`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ name, score })
+        });
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        console.log('Score submitted:', data);
+        fetchLeaderboard(); // Refresh leaderboard after submitting the score
+    } catch (error) {
+        console.error('Error:', error);
+    }
 }
 
 // Fetch leaderboard data when the page loads
 window.addEventListener('load', fetchLeaderboard);
+

@@ -1,53 +1,64 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
+require('dotenv').config(); // To use environment variables from .env file
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 5000; // Use PORT from .env or default to 5000
 
 // Middleware
+const cors = require('cors');
 app.use(cors({
-  origin: 'https://dog-blush-six.vercel.app',
+  origin: 'https://dog-blush-six.vercel.app', // Your frontend URL
 }));
+
 app.use(express.json());
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI, {
+// Connect to MongoDB Atlas
+const mongodbUri = process.env.MONGODB_URI; // Use MongoDB URI from .env
+mongoose.connect(mongodbUri, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+  useUnifiedTopology: true
+});
 
-// Schema and model for leaderboard
-const leaderboardSchema = new mongoose.Schema({
+const db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+  console.log('Connected to MongoDB Atlas');
+});
+
+// Define Schema and Model
+const playerSchema = new mongoose.Schema({
   name: String,
   score: Number
 });
-const Leaderboard = mongoose.model('Leaderboard', leaderboardSchema);
+
+const Player = mongoose.model('Player', playerSchema);
 
 // Routes
 app.get('/leaderboard', async (req, res) => {
   try {
-    const leaders = await Leaderboard.find().sort({ score: -1 }).limit(10);
-    res.json(leaders);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    const players = await Player.find().sort({ score: -1 }).limit(10); // Top 10 players
+    res.json(players);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
 app.post('/leaderboard', async (req, res) => {
-  const { name, score } = req.body;
+  const player = new Player({
+    name: req.body.name,
+    score: req.body.score
+  });
+
   try {
-    const newEntry = new Leaderboard({ name, score });
-    await newEntry.save();
-    res.status(201).json(newEntry);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const newPlayer = await player.save();
+    res.status(201).json(newPlayer);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
   }
 });
 
 app.listen(port, () => {
-  console.log(`Server running on port ${port}`);
+  console.log(`Server is running on port ${port}`);
 });
