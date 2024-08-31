@@ -1,16 +1,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+require('dotenv').config(); // Load environment variables from .env file
 
 const app = express();
-const port = 5000;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://cerjuozas:c3fjrfoqvHkYYxjx@cluster1.lsiee.mongodb.net/?retryWrites=true&w=majority&appName=Cluster1', {
+const MONGO_URI = process.env.MONGO_URI;
+
+mongoose.connect(MONGO_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -21,7 +20,6 @@ db.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
 
-// Define Schema and Model
 const playerSchema = new mongoose.Schema({
   name: String,
   score: Number
@@ -29,17 +27,16 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// Routes
-app.get('/leaderboard', async (req, res) => {
+app.get('/api/leaderboard', async (req, res) => {
   try {
-    const players = await Player.find().sort({ score: -1 }).limit(5); // Top 10 players
+    const players = await Player.find().sort({ score: -1 }).limit(10);
     res.json(players);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-app.post('/leaderboard', async (req, res) => {
+app.post('/api/leaderboard', async (req, res) => {
   const player = new Player({
     name: req.body.name,
     score: req.body.score
@@ -53,6 +50,4 @@ app.post('/leaderboard', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+module.exports = app;
