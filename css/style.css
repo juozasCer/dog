@@ -386,8 +386,8 @@ header {
 
 /* Name Input Section Styles */
 #nameInputSection {
-  margin-top: 20px;
-  width: 290px; /* Adjusted to fit side by side with leaderboard */
+  margin-top: 200px;
+  /* width: 290px; Adjusted to fit side by side with leaderboard */
   display: flex;
   flex-direction: column;
   align-items: center;
