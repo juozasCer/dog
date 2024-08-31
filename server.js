@@ -32,7 +32,7 @@ const Player = mongoose.model('Player', playerSchema);
 // Routes
 app.get('/leaderboard', async (req, res) => {
   try {
-    const players = await Player.find().sort({ score: -1 }).limit(10); // Top 10 players
+    const players = await Player.find().sort({ score: -1 }).limit(5); // Top 10 players
     res.json(players);
   } catch (error) {
     res.status(500).json({ message: error.message });
