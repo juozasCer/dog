@@ -382,7 +382,7 @@ header {
 }
 
 #leaderboard tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background-color: #262646;
 }
 
 /* Name Input Section Styles */
