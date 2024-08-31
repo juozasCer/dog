@@ -381,7 +381,7 @@ header {
   background-color: #1b1b34;
 }
 
-#leaderboard tr:nth-child(even) {
+#leaderboard tr {
   background-color: #1b1b34;
 }
 
