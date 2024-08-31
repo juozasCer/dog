@@ -274,6 +274,12 @@ header {
   font-weight: 400;
 }
 
+.leaderboard-title
+{
+  position: relative;
+  left: 20%;
+}
+
 /* Container for game area and leaderboard */
 .game-leaderboard-container {
   display: flex;
