@@ -366,6 +366,7 @@ header {
 
 #leaderboard {
   width: 50%;
+  border-radius: 5px;
   border-collapse: collapse;
   text-align: left;
   background-color: #fff; /* Ensures readability if overlapping issues persist */
