@@ -1,8 +1,8 @@
 {
   "functions": {
     "api/**/*.js": {
-      "memory": 1024, // Increase memory to 1024 MB
-      "maxDuration": 10 // Increase timeout to 10 seconds
+      "memory": 1024,
+      "maxDuration": 10
     }
   }
 }
