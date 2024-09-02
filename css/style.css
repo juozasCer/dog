@@ -396,11 +396,11 @@ header {
   border-top-right-radius: 20px; /* Round top-right corner */
 }
 
-#leaderboard tr:first-child {
+#leaderboard td:first-child {
   border-top-left-radius: 20px; /* Round top-left corner */
 }
 
-#leaderboard tr:last-child {
+#leaderboard td:last-child {
   border-top-right-radius: 20px; /* Round top-right corner */
 }
 
