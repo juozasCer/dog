@@ -373,7 +373,7 @@ header {
 
 #leaderboard {
   width: 50%;
-  border-radius: 5px;
+  border-radius: 20px;
   /* border-collapse: collapse; */
   text-align: left;
   background-color: #262646; /* Ensures readability if overlapping issues persist */
@@ -388,7 +388,16 @@ header {
   background-color: #1b1b34;
 }
 
+#leaderboard th:first-child {
+  border-top-left-radius: 20px; /* Round top-left corner */
+}
+
+#leaderboard th:last-child {
+  border-top-right-radius: 20px; /* Round top-right corner */
+}
+
 #leaderboard tr {
+  border-top-left-radius: 20px;
   background-color: #1b1b34;
 }
 
