@@ -373,15 +373,13 @@ header {
 
 #leaderboard {
   width: 50%;
-  border-radius: 20px;
-  /* border-collapse: collapse; */
+  border-radius: 20px; /* General border-radius */
   text-align: left;
   background-color: #262646; /* Ensures readability if overlapping issues persist */
 }
 
 #leaderboard th, #leaderboard td {
   padding: 10px;
-  /* border-bottom: 1px solid #ddd; */
 }
 
 #leaderboard th {
@@ -389,25 +387,32 @@ header {
 }
 
 #leaderboard th:first-child {
-  border-top-left-radius: 20px; /* Round top-left corner */
+  border-top-left-radius: 20px; /* Round top-left corner of header */
 }
 
 #leaderboard th:last-child {
-  border-top-right-radius: 20px; /* Round top-right corner */
+  border-top-right-radius: 20px; /* Round top-right corner of header */
 }
 
-#leaderboard td:first-child {
-  border-top-left-radius: 20px; /* Round top-left corner */
-}
-
+/* Remove unnecessary rounding for all tds */
+#leaderboard td:first-child,
 #leaderboard td:last-child {
-  border-top-right-radius: 20px; /* Round top-right corner */
+  border-radius: 0; /* Reset any rounding on table data cells */
+}
+
+/* Apply border-radius to bottom corners of the last row */
+#leaderboard tr:last-child td:first-child {
+  border-bottom-left-radius: 20px; /* Round bottom-left corner */
+}
+
+#leaderboard tr:last-child td:last-child {
+  border-bottom-right-radius: 20px; /* Round bottom-right corner */
 }
 
 #leaderboard tr {
-  border-top-left-radius: 20px;
   background-color: #1b1b34;
 }
+
 
 /* Name Input Section Styles */
 #nameInputSection {
