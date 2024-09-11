@@ -25,40 +25,72 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// GET endpoint to retrieve leaderboard
-app.get('/api/leaderboard', async (req, res) => {
+// Start game and reset the score
+app.post('/api/startGame', async (req, res) => {
+  const { name } = req.body;
+
   try {
-    // Find all players, sort by score in descending order, and limit to top 5
-    const players = await Player.find().sort({ score: -1 }).limit(5);
-    res.json(players);
+    const player = await Player.findOne({ name });
+
+    if (player) {
+      player.score = 0; // Reset score at the start of the game
+      await player.save();
+    } else {
+      const newPlayer = new Player({ name });
+      await newPlayer.save();
+    }
+
+    res.status(200).json({ message: 'Game started' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// POST endpoint to submit scores
-app.post('/api/leaderboard', async (req, res) => {
-  const { name, score } = req.body;
+// Handle collision and update the score
+app.post('/api/collision', async (req, res) => {
+  const { name } = req.body;
 
   try {
-    // Find player by name and update score if new score is higher
     const player = await Player.findOne({ name });
 
     if (player) {
-      // Update player score only if the new score is higher
-      if (score > player.score) {
-        player.score = score;
-        await player.save();
-      }
-    } else {
-      // Create a new player document
-      const newPlayer = new Player({ name, score });
-      await newPlayer.save();
-    }
+      player.score += 10; // Increase score by 10 per collision
+      await player.save();
 
-    res.status(201).json({ name, score });
+      res.status(200).json({ score: player.score });
+    } else {
+      res.status(404).json({ message: 'Player not found' });
+    }
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Handle game over
+app.post('/api/gameOver', async (req, res) => {
+  const { name } = req.body;
+
+  try {
+    const player = await Player.findOne({ name });
+
+    if (player) {
+      // Keep the score as is and return it
+      res.status(200).json({ score: player.score });
+    } else {
+      res.status(404).json({ message: 'Player not found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Get the leaderboard
+app.get('/api/leaderboard', async (req, res) => {
+  try {
+    const players = await Player.find().sort({ score: -1 }).limit(5);
+    res.json(players);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
