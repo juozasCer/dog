@@ -10,8 +10,8 @@ const leaderboardTable = document.querySelector('#leaderboard tbody');
 
 let gameInterval;
 let isGameOver = false;
-let score = 0;
 let playerName = '';
+let inputs = [];
 
 // Check for stored player name on page load
 window.addEventListener('load', () => {
@@ -30,10 +30,9 @@ window.addEventListener('load', () => {
 function startGame() {
     startButton.style.display = 'none';
     gameOverText.style.display = 'none';
-
     isGameOver = false;
-    score = 0;
-    scoreDisplay.textContent = `Score: ${score}`;
+    inputs = [];  // Reset the inputs array
+
     clearInterval(gameInterval);
     playerPosition = gameArea.clientWidth / 2 - player.clientWidth / 2;
     player.style.left = `${playerPosition}px`;
@@ -84,8 +83,7 @@ function updateFallingBlocks() {
             blockLeft < playerLeft + 50 &&
             blockLeft + 30 > playerLeft
         ) {
-            score += 10;
-            scoreDisplay.textContent = `Score: ${score}`;
+            inputs.push({ action: 'collect', time: Date.now() }); // Send player action as input
             block.remove();
         }
     });
@@ -105,14 +103,13 @@ function gameOver() {
     clearInterval(gameInterval);
 
     gameOverText.style.display = 'block';
-
     document.querySelectorAll('.falling-block').forEach(block => block.remove());
 
     setTimeout(() => {
         gameOverText.style.display = 'none';
         startButton.style.display = 'block';
 
-        submitScore(playerName, score);
+        submitScore(playerName, inputs);  // Submit inputs to server for scoring
     }, 2000);
 }
 
@@ -123,6 +120,8 @@ function movePlayerWithMouse(event) {
     playerPosition = mouseX - (player.clientWidth / 2);
     playerPosition = Math.max(0, Math.min(gameArea.clientWidth - player.clientWidth, playerPosition));
     player.style.left = `${playerPosition}px`;
+
+    inputs.push({ action: 'move', position: playerPosition, time: Date.now() }); // Capture player movement as input
 }
 
 gameArea.addEventListener('mousemove', movePlayerWithMouse);
@@ -132,60 +131,39 @@ startButton.addEventListener('click', startGame);
 setNameButton.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
     if (name) {
-        // Fetch the leaderboard to check if the name is already used
         fetch('/api/leaderboard')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // Get the list of existing names from the leaderboard data
                 const existingNames = data.map(player => player.name);
-                console.log('Existing names:', existingNames);
-                
                 if (existingNames.includes(name)) {
                     alert('This name is already taken. Please choose another one.');
                 } else {
-                    // Save the name and update the UI
                     playerName = name;
                     localStorage.setItem('playerName', playerName);
-                    nameInputSection.style.display = 'none'; // Hide the name input section
-                    startButton.style.display = 'block'; // Show the start button
-                    fetchLeaderboard(); // Refresh the leaderboard
+                    nameInputSection.style.display = 'none';
+                    startButton.style.display = 'block';
+                    fetchLeaderboard();
                 }
             })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while checking names. Please try again.');
-            });
+            .catch(error => alert('An error occurred while checking names.'));
     } else {
         alert('Please enter a valid name');
     }
 });
 
-
-function adjustBackgroundScrollSpeed(speed) {
-    gameArea.style.animationDuration = `${speed}s`;
-}
-
-adjustBackgroundScrollSpeed(10);
-
-function submitScore(name, score) {
+function submitScore(name, inputs) {
     fetch('/api/leaderboard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, score })
+        body: JSON.stringify({ name, inputs }) // Send player actions to the server
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Score submitted:', data);
         fetchLeaderboard();
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => alert('An error occurred while submitting the score.'));
 }
 
 function fetchLeaderboard() {
@@ -193,16 +171,10 @@ function fetchLeaderboard() {
         .then(response => response.json())
         .then(data => {
             leaderboardTable.innerHTML = '';
-
             data.forEach((player, index) => {
                 const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${player.name}</td>
-                    <td>${player.score}</td>
-                `;
+                row.innerHTML = `<td>${index + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
                 leaderboardTable.appendChild(row);
             });
-        })
-        .catch(error => console.error('Error:', error));
+        });
 }
