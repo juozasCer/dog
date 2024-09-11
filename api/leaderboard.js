@@ -24,6 +24,7 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
+// GET endpoint to retrieve leaderboard
 app.get('/api/leaderboard', async (req, res) => {
   try {
     const players = await Player.find().sort({ score: -1 }).limit(5);
@@ -33,11 +34,11 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
+// POST endpoint to submit scores
 app.post('/api/leaderboard', async (req, res) => {
   const { name, inputs } = req.body;
 
   try {
-    // Calculate the score from the inputs
     let score = 0;
     inputs.forEach(input => {
       if (input.event === 'blockCollected') {
@@ -61,6 +62,12 @@ app.post('/api/leaderboard', async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
+});
+
+// GET endpoint to retrieve spawn rate
+app.get('/api/spawnRate', (req, res) => {
+  // Return a fixed spawn rate (e.g., 0.05) for simplicity
+  res.json({ spawnRate: 0.05 });
 });
 
 module.exports = app;

@@ -12,11 +12,13 @@ let gameInterval;
 let isGameOver = false;
 let score = 0;
 let playerName = '';
-let inputs = []; // To track game actions like block collection
+let spawnRate = 0.05; // Default value
 
-// Check for stored player name on page load
 window.addEventListener('load', () => {
     fetchLeaderboard();
+    fetchSpawnRate().then(fetchedSpawnRate => {
+        spawnRate = fetchedSpawnRate; // Update the spawn rate from the server
+    });
     const storedName = localStorage.getItem('playerName');
     if (storedName) {
         playerName = storedName;
@@ -29,7 +31,6 @@ window.addEventListener('load', () => {
 });
 
 function startGame() {
-    inputs = []; // Clear previous inputs
     startButton.style.display = 'none';
     gameOverText.style.display = 'none';
 
@@ -86,8 +87,7 @@ function updateFallingBlocks() {
             blockLeft < playerLeft + 50 &&
             blockLeft + 30 > playerLeft
         ) {
-            score += 10;  // Local score (for display only)
-            inputs.push({ event: 'blockCollected', value: 10 });  // Track the action
+            score += 10;
             scoreDisplay.textContent = `Score: ${score}`;
             block.remove();
         }
@@ -97,7 +97,7 @@ function updateFallingBlocks() {
 function gameLoop() {
     if (!isGameOver) {
         updateFallingBlocks();
-        if (Math.random() < 0.05) {
+        if (Math.random() < spawnRate) {
             createFallingBlock();
         }
     }
@@ -115,8 +115,7 @@ function gameOver() {
         gameOverText.style.display = 'none';
         startButton.style.display = 'block';
 
-        // Instead of submitting the score directly, submit the actions
-        submitScore(playerName, inputs);
+        submitScore(playerName, score);
     }, 2000);
 }
 
@@ -137,10 +136,14 @@ setNameButton.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
     if (name) {
         fetch('/api/leaderboard')
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 const existingNames = data.map(player => player.name);
-                
                 if (existingNames.includes(name)) {
                     alert('This name is already taken. Please choose another one.');
                 } else {
@@ -152,6 +155,7 @@ setNameButton.addEventListener('click', () => {
                 }
             })
             .catch(error => {
+                console.error('Error:', error);
                 alert('An error occurred while checking names. Please try again.');
             });
     } else {
@@ -159,22 +163,30 @@ setNameButton.addEventListener('click', () => {
     }
 });
 
-function submitScore(name, inputs) {
+function fetchSpawnRate() {
+    return fetch('/api/spawnRate')
+        .then(response => response.json())
+        .then(data => data.spawnRate)
+        .catch(error => {
+            console.error('Error fetching spawn rate:', error);
+            return 0.05; // Default value in case of error
+        });
+}
+
+function submitScore(name, score) {
     fetch('/api/leaderboard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, inputs }) // Submit the inputs, not the score
+        body: JSON.stringify({ name, inputs: [{ event: 'blockCollected', value: score }] })
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Score submitted:', data);
         fetchLeaderboard();
     })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the score.');
-    });
+    .catch(error => console.error('Error:', error));
 }
 
 function fetchLeaderboard() {
