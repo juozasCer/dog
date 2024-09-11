@@ -309,7 +309,7 @@ header {
   border-radius: 20px;
   background-image: url('/images/GAMEBG.png');
   background-size: auto 540px;
-  animation: scrollBackground 10ms linear infinite;
+  animation: scrollBackground 10s linear infinite;
   z-index: 1; /* Ensuring game area is on top */
 }
 
