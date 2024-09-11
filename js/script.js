@@ -12,6 +12,7 @@ let gameInterval;
 let isGameOver = false;
 let score = 0;
 let playerName = '';
+let inputs = []; // To track game actions like block collection
 
 // Check for stored player name on page load
 window.addEventListener('load', () => {
@@ -28,6 +29,7 @@ window.addEventListener('load', () => {
 });
 
 function startGame() {
+    inputs = []; // Clear previous inputs
     startButton.style.display = 'none';
     gameOverText.style.display = 'none';
 
@@ -84,7 +86,8 @@ function updateFallingBlocks() {
             blockLeft < playerLeft + 50 &&
             blockLeft + 30 > playerLeft
         ) {
-            score += 10;
+            score += 10;  // Local score (for display only)
+            inputs.push({ event: 'blockCollected', value: 10 });  // Track the action
             scoreDisplay.textContent = `Score: ${score}`;
             block.remove();
         }
@@ -112,7 +115,8 @@ function gameOver() {
         gameOverText.style.display = 'none';
         startButton.style.display = 'block';
 
-        submitScore(playerName, score);
+        // Instead of submitting the score directly, submit the actions
+        submitScore(playerName, inputs);
     }, 2000);
 }
 
@@ -132,32 +136,22 @@ startButton.addEventListener('click', startGame);
 setNameButton.addEventListener('click', () => {
     const name = playerNameInput.value.trim();
     if (name) {
-        // Fetch the leaderboard to check if the name is already used
         fetch('/api/leaderboard')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                // Get the list of existing names from the leaderboard data
                 const existingNames = data.map(player => player.name);
-                console.log('Existing names:', existingNames);
                 
                 if (existingNames.includes(name)) {
                     alert('This name is already taken. Please choose another one.');
                 } else {
-                    // Save the name and update the UI
                     playerName = name;
                     localStorage.setItem('playerName', playerName);
-                    nameInputSection.style.display = 'none'; // Hide the name input section
-                    startButton.style.display = 'block'; // Show the start button
-                    fetchLeaderboard(); // Refresh the leaderboard
+                    nameInputSection.style.display = 'none';
+                    startButton.style.display = 'block';
+                    fetchLeaderboard();
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
                 alert('An error occurred while checking names. Please try again.');
             });
     } else {
@@ -165,27 +159,22 @@ setNameButton.addEventListener('click', () => {
     }
 });
 
-
-function adjustBackgroundScrollSpeed(speed) {
-    gameArea.style.animationDuration = `${speed}s`;
-}
-
-adjustBackgroundScrollSpeed(10);
-
-function submitScore(name, score) {
+function submitScore(name, inputs) {
     fetch('/api/leaderboard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ name, score })
+        body: JSON.stringify({ name, inputs }) // Submit the inputs, not the score
     })
     .then(response => response.json())
     .then(data => {
-        console.log('Score submitted:', data);
         fetchLeaderboard();
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting the score.');
+    });
 }
 
 function fetchLeaderboard() {

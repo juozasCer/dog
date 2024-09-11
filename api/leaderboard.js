@@ -17,7 +17,6 @@ db.once('open', () => {
   console.log('Connected to MongoDB Atlas');
 });
 
-// Define schema with a unique index for player names
 const playerSchema = new mongoose.Schema({
   name: { type: String, unique: true },
   score: { type: Number, default: 0 }
@@ -25,10 +24,8 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// GET endpoint to retrieve leaderboard
 app.get('/api/leaderboard', async (req, res) => {
   try {
-    // Find all players, sort by score in descending order, and limit to top 5
     const players = await Player.find().sort({ score: -1 }).limit(5);
     res.json(players);
   } catch (error) {
@@ -36,22 +33,26 @@ app.get('/api/leaderboard', async (req, res) => {
   }
 });
 
-// POST endpoint to submit scores
 app.post('/api/leaderboard', async (req, res) => {
-  const { name, score } = req.body;
+  const { name, inputs } = req.body;
 
   try {
-    // Find player by name and update score if new score is higher
+    // Calculate the score from the inputs
+    let score = 0;
+    inputs.forEach(input => {
+      if (input.event === 'blockCollected') {
+        score += input.value;
+      }
+    });
+
     const player = await Player.findOne({ name });
 
     if (player) {
-      // Update player score only if the new score is higher
       if (score > player.score) {
         player.score = score;
         await player.save();
       }
     } else {
-      // Create a new player document
       const newPlayer = new Player({ name, score });
       await newPlayer.save();
     }
