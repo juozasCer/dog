@@ -8,12 +8,11 @@ const playerNameInput = document.getElementById('playerName');
 const setNameButton = document.getElementById('setNameButton');
 const leaderboardTable = document.querySelector('#leaderboard tbody');
 
-let gameInterval;
-let isGameOver = false;
-let score = 0;
 let playerName = '';
+let gameInterval = null;
+let isGameOver = false;
 
-// Check for stored player name on page load
+// Fetch the leaderboard and player name on page load
 window.addEventListener('load', () => {
     fetchLeaderboard();
     const storedName = localStorage.getItem('playerName');
@@ -30,64 +29,35 @@ window.addEventListener('load', () => {
 function startGame() {
     startButton.style.display = 'none';
     gameOverText.style.display = 'none';
-
     isGameOver = false;
-    score = 0;
-    scoreDisplay.textContent = `Score: ${score}`;
-    clearInterval(gameInterval);
-    playerPosition = gameArea.clientWidth / 2 - player.clientWidth / 2;
-    player.style.left = `${playerPosition}px`;
 
+    fetchPlayerState();
     gameInterval = setInterval(gameLoop, 50);
 }
 
-function createFallingBlock() {
-    const block = document.createElement('div');
-    block.classList.add('falling-block');
-
-    const minSize = 20;
-    const maxSize = 50;
-    const size = Math.floor(Math.random() * (maxSize - minSize + 1)) + minSize;
-
-    block.style.width = `${size}px`;
-    block.style.height = `${size}px`;
-    block.style.position = 'absolute';
-    block.style.top = '0px';
-
-    const imageIndex = Math.floor(Math.random() * 4) + 1;
-    block.style.backgroundImage = `url('/images/${imageIndex}.png')`;
-    block.style.backgroundSize = 'cover';
-    block.style.backgroundRepeat = 'no-repeat';
-    block.style.backgroundPosition = 'center';
-
-    block.style.left = `${Math.random() * (gameArea.clientWidth - size)}px`;
-
-    gameArea.appendChild(block);
+async function fetchPlayerState() {
+    // Fetch player state from server and update the score and position
+    const response = await fetch('/api/player-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerName, action: 'fetchState' })
+    });
+    const { player } = await response.json();
+    scoreDisplay.textContent = `Score: ${player.score}`;
 }
 
-function updateFallingBlocks() {
-    const blocks = document.querySelectorAll('.falling-block');
+function movePlayerWithMouse(event) {
+    const gameAreaRect = gameArea.getBoundingClientRect();
+    const mouseX = event.clientX - gameAreaRect.left;
 
-    blocks.forEach(block => {
-        const blockTop = parseFloat(block.style.top);
-        block.style.top = `${blockTop + 5}px`;
+    const playerPosition = mouseX - (player.clientWidth / 2);
+    player.style.left = `${Math.max(0, Math.min(gameArea.clientWidth - player.clientWidth, playerPosition))}px`;
 
-        if (blockTop + 30 > gameArea.clientHeight) {
-            gameOver();
-        }
-
-        const blockLeft = parseFloat(block.style.left);
-        const playerLeft = parseFloat(player.style.left);
-
-        if (
-            blockTop + 30 >= gameArea.clientHeight - 70 &&
-            blockLeft < playerLeft + 50 &&
-            blockLeft + 30 > playerLeft
-        ) {
-            score += 10;
-            scoreDisplay.textContent = `Score: ${score}`;
-            block.remove();
-        }
+    // Send action to the server
+    fetch('/api/player-action', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ playerName, action: playerPosition > player.style.left ? 'moveRight' : 'moveLeft' })
     });
 }
 
@@ -100,109 +70,73 @@ function gameLoop() {
     }
 }
 
+function updateFallingBlocks() {
+    const blocks = document.querySelectorAll('.falling-block');
+    blocks.forEach(async (block) => {
+        const blockTop = parseFloat(block.style.top);
+        block.style.top = `${blockTop + 5}px`;
+
+        const blockLeft = parseFloat(block.style.left);
+        const playerLeft = parseFloat(player.style.left);
+
+        if (blockTop + 30 > gameArea.clientHeight - 70 && blockLeft < playerLeft + 50 && blockLeft + 30 > playerLeft) {
+            block.remove();
+
+            // Send score update to the server
+            await fetch('/api/player-action', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ playerName, action: 'catchBlock' })
+            });
+
+            // Fetch the updated player state after catching the block
+            fetchPlayerState();
+        }
+
+        if (blockTop + 30 > gameArea.clientHeight) {
+            gameOver();
+        }
+    });
+}
+
 function gameOver() {
     isGameOver = true;
     clearInterval(gameInterval);
-
     gameOverText.style.display = 'block';
 
+    // Clear blocks
     document.querySelectorAll('.falling-block').forEach(block => block.remove());
 
     setTimeout(() => {
         gameOverText.style.display = 'none';
         startButton.style.display = 'block';
 
-        submitScore(playerName, score);
+        // Submit final score to leaderboard
+        submitScore(playerName);
     }, 2000);
 }
 
-function movePlayerWithMouse(event) {
-    const gameAreaRect = gameArea.getBoundingClientRect();
-    const mouseX = event.clientX - gameAreaRect.left;
+async function submitScore(name) {
+    const response = await fetch('/api/leaderboard', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, score: parseInt(scoreDisplay.textContent.split(': ')[1]) })
+    });
+    const data = await response.json();
+    fetchLeaderboard();
+}
 
-    playerPosition = mouseX - (player.clientWidth / 2);
-    playerPosition = Math.max(0, Math.min(gameArea.clientWidth - player.clientWidth, playerPosition));
-    player.style.left = `${playerPosition}px`;
+async function fetchLeaderboard() {
+    const response = await fetch('/api/leaderboard');
+    const data = await response.json();
+
+    leaderboardTable.innerHTML = '';
+    data.forEach((player, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${index + 1}</td><td>${player.name}</td><td>${player.score}</td>`;
+        leaderboardTable.appendChild(row);
+    });
 }
 
 gameArea.addEventListener('mousemove', movePlayerWithMouse);
-
 startButton.addEventListener('click', startGame);
-
-setNameButton.addEventListener('click', () => {
-    const name = playerNameInput.value.trim();
-    if (name) {
-        // Fetch the leaderboard to check if the name is already used
-        fetch('/api/leaderboard')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Get the list of existing names from the leaderboard data
-                const existingNames = data.map(player => player.name);
-                console.log('Existing names:', existingNames);
-                
-                if (existingNames.includes(name)) {
-                    alert('This name is already taken. Please choose another one.');
-                } else {
-                    // Save the name and update the UI
-                    playerName = name;
-                    localStorage.setItem('playerName', playerName);
-                    nameInputSection.style.display = 'none'; // Hide the name input section
-                    startButton.style.display = 'block'; // Show the start button
-                    fetchLeaderboard(); // Refresh the leaderboard
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while checking names. Please try again.');
-            });
-    } else {
-        alert('Please enter a valid name');
-    }
-});
-
-
-function adjustBackgroundScrollSpeed(speed) {
-    gameArea.style.animationDuration = `${speed}s`;
-}
-
-adjustBackgroundScrollSpeed(10);
-
-function submitScore(name, score) {
-    fetch('/api/leaderboard', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ name, score })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Score submitted:', data);
-        fetchLeaderboard();
-    })
-    .catch(error => console.error('Error:', error));
-}
-
-function fetchLeaderboard() {
-    fetch('/api/leaderboard')
-        .then(response => response.json())
-        .then(data => {
-            leaderboardTable.innerHTML = '';
-
-            data.forEach((player, index) => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${player.name}</td>
-                    <td>${player.score}</td>
-                `;
-                leaderboardTable.appendChild(row);
-            });
-        })
-        .catch(error => console.error('Error:', error));
-}
