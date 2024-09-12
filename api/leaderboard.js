@@ -65,10 +65,10 @@ app.post('/api/leaderboard', async (req, res) => {
 });
 
 // GET endpoint to retrieve spawn rate
-app.get('/api/spawnRate', (req, res) => {
+/*app.get('/api/spawnRate', (req, res) => {
   console.log('Fetching spawn rate');
   res.json({ spawnRate: 0.05 });
-});
+});*/
 
 module.exports = app;
 
