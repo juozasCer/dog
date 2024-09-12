@@ -164,27 +164,14 @@ setNameButton.addEventListener('click', () => {
 });
 
 function fetchSpawnRate() {
-    return fetch('/api/spawnRate')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.text(); // Get response as text to check if it's not JSON
-        })
-        .then(text => {
-            try {
-                const data = JSON.parse(text); // Parse JSON
-                return data.spawnRate;
-            } catch (e) {
-                throw new Error('Response is not valid JSON');
-            }
-        })
+    return fetch('/api/leaderboard/spawnRate')
+        .then(response => response.json())
+        .then(data => data.spawnRate)
         .catch(error => {
             console.error('Error fetching spawn rate:', error);
             return 0.05; // Default value in case of error
         });
 }
-
 
 function submitScore(name, score) {
     fetch('/api/leaderboard', {
