@@ -1,9 +1,6 @@
-export default function handler(req, res) {
-  if (req.method === 'GET') {
-    console.log('Fetching spawn rate');
-    res.status(200).json({ spawnRate: 0.05 });
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-}
+// GET endpoint to retrieve spawn rate
+app.get('/api/spawnRate', (req, res) => {
+  // Return a fixed spawn rate (e.g., 0.05) for simplicity
+  console.log('Fetching spawn rate');
+  res.json({ spawnRate: 0.05 });
+});
