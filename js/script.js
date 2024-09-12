@@ -169,7 +169,7 @@ function fetchSpawnRate() {
         .then(data => data.spawnRate)
         .catch(error => {
             console.error('Error fetching spawn rate:', error);
-            return 5; // Default value in case of error
+            return 0.05; // Default value in case of error
         });
 }
 
