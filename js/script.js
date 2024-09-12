@@ -164,7 +164,7 @@ setNameButton.addEventListener('click', () => {
 });
 
 function fetchSpawnRate() {
-    return fetch('/api/spawnRate')
+    return fetch('/api/leaderboard/spawnRate')
         .then(response => response.json())
         .then(data => data.spawnRate)
         .catch(error => {
