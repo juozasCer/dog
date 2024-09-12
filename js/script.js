@@ -12,7 +12,7 @@ let gameInterval;
 let isGameOver = false;
 let score = 0;
 let playerName = '';
-let spawnRate = 0.05; // Default value
+let spawnRate = 5; // Default value
 
 window.addEventListener('load', () => {
     fetchLeaderboard();
@@ -169,7 +169,7 @@ function fetchSpawnRate() {
         .then(data => data.spawnRate)
         .catch(error => {
             console.error('Error fetching spawn rate:', error);
-            return 0.05; // Default value in case of error
+            return 5; // Default value in case of error
         });
 }
 
