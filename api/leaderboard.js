@@ -24,12 +24,6 @@ const playerSchema = new mongoose.Schema({
 
 const Player = mongoose.model('Player', playerSchema);
 
-// GET endpoint to retrieve spawn rate
-app.get('/api/spawnRate', (req, res) => {
-  console.log('Fetching spawn rate');
-  res.json({ spawnRate: 0.05 });
-});
-
 // GET endpoint to retrieve leaderboard
 app.get('/api/leaderboard', async (req, res) => {
   try {
@@ -70,7 +64,11 @@ app.post('/api/leaderboard', async (req, res) => {
   }
 });
 
-
+// GET endpoint to retrieve spawn rate
+app.get('/api/spawnRate', (req, res) => {
+  console.log('Fetching spawn rate');
+  res.json({ spawnRate: 0.05 });
+});
 
 module.exports = app;
 
