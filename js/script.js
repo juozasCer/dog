@@ -12,7 +12,7 @@ let gameInterval;
 let isGameOver = false;
 let score = 0;
 let playerName = '';
-let spawnRate = 5; // Default value
+let spawnRate = 0.05; // Default value
 
 window.addEventListener('load', () => {
     fetchLeaderboard();
