@@ -3,7 +3,7 @@ const router = express.Router();
 
 router.get('/api/spawnRate', (req, res) => {
   console.log('Fetching spawn rate');
-  res.json({ spawnRate: 0.05 });
+  res.json({ spawnRate: 5 });
 });
 
 module.exports = router;
