@@ -163,7 +163,7 @@ setNameButton.addEventListener('click', () => {
     }
 });
 
-async function fetchSpawnRate() {
+ function fetchSpawnRate() {
     return fetch('/api/spawnRate')
         .then(response => {
             if (!response.ok) {
