@@ -164,7 +164,7 @@ setNameButton.addEventListener('click', () => {
 });
 
 function fetchSpawnRate() {
-    return fetch('/api/leaderboard')
+    return fetch('/api/spawnRate')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
