@@ -40,30 +40,7 @@
     </div>
   </header>
 
-  <!-- Section 1 -->
-  <div id="section1" class="section">
-    <div class="video-background">
-      <video id="videoForward" autoplay muted>
-        <source src="images/MAINBG.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <video id="videoReverse" muted style="display:none;">
-        <source src="images/MAINBGR.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-    <div class="content">
-      <div class="logo">GUARD<br>SOLKY</div>
-      <div class="contact-container">
-        <div class="contact-info">
-          <span id="contactAddress">CA: 6gx2cVNUNVzrf4oJfTgBybvbJ2wMahjqWVxX9c8ipump</span>
-          <button class="copy-button" onclick="copyContactAddress()"></button>
-        </div>
-      </div>
-      <a href="https://example.com" class="contact-button">$SOLKY</a>
-    </div>
-  </div>
-  <div class="separator"></div>
+  
 
   <!-- Section 2 -->
   <div id="section2" class="section">
@@ -107,7 +84,30 @@
     </div>
   </div>
   <div class="separator"></div>
-
+<!-- Section 1 -->
+  <div id="section1" class="section">
+    <div class="video-background">
+      <video id="videoForward" autoplay muted loop>
+        <source src="images/MAIN.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+      <!-- <video id="videoReverse" muted style="display:none;">
+        <source src="images/MAINBGR.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video> -->
+    </div>
+    <div class="content">
+      <div class="logo">GUARD<br>SOLKY</div>
+      <div class="contact-container">
+        <div class="contact-info">
+          <span id="contactAddress">CA: 6gx2cVNUNVzrf4oJfTgBybvbJ2wMahjqWVxX9c8ipump</span>
+          <button class="copy-button" onclick="copyContactAddress()"></button>
+        </div>
+      </div>
+      <a href="https://example.com" class="contact-button">$SOLKY</a>
+    </div>
+  </div>
+  <div class="separator"></div>
   <!-- Section 3 -->
   <div id="section3" class="section">
     <p>Section 3 Content</p>
@@ -127,7 +127,7 @@
 
   <!-- Link to the external JavaScript file -->
   <script src="/js/script.js"></script>
-  <script src="/js/bgscript.js"></script>
+  <!-- <script src="/js/bgscript.js"></script> -->
   <script>
     function copyContactAddress() {
       // Get the text from the span element

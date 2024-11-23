@@ -57,7 +57,7 @@ function createFallingBlock() {
     block.style.position = 'absolute';
     block.style.top = '0px';
 
-    const imageIndex = Math.floor(Math.random() * 4) + 1;
+    const imageIndex = Math.floor(Math.random() * 5) + 1;
     block.style.backgroundImage = `url('/images/${imageIndex}.png')`;
     block.style.backgroundSize = 'cover';
     block.style.backgroundRepeat = 'no-repeat';
