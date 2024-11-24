@@ -146,6 +146,37 @@
         console.error('Failed to copy text: ', err);
       });
     }
+    function adjustTableHeaderRadius() {
+  const tbody = document.querySelector("#leaderboard tbody"); // Select the tbody element
+  if (tbody && tbody.children.length > 0) { // Check if tbody exists and has children
+    const firstChild = document.querySelector("#leaderboard th:first-child");
+    const lastChild = document.querySelector("#leaderboard th:last-child");
+
+    if (firstChild) {
+      firstChild.classList.add("no-bottom-left-radius");
+    }
+
+    if (lastChild) {
+      lastChild.classList.add("no-bottom-right-radius");
+    }
+  }
+}
+
+// Add the required styles in CSS
+const style = document.createElement("style");
+style.textContent = `
+  .no-bottom-left-radius {
+    border-bottom-left-radius: 0 !important;
+  }
+  .no-bottom-right-radius {
+    border-bottom-right-radius: 0 !important;
+  }
+`;
+document.head.appendChild(style);
+
+// Call the function to adjust the styles
+adjustTableHeaderRadius();
+
   </script>
   
 </body>
