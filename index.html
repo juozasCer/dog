@@ -147,19 +147,23 @@
       });
     }
     function adjustTableHeaderRadius() {
-  const tbody = document.querySelector("#leaderboard tbody"); // Select the tbody element
-  if (tbody && tbody.children.length > 0) { // Check if tbody has children
-    const firstChild = document.querySelector("#leaderboard th:first-child");
-    const lastChild = document.querySelector("#leaderboard th:last-child");
+    const leaderboardTable = document.querySelector("#leaderboard");
+    const tbody = leaderboardTable.querySelector("tbody");
 
-    if (firstChild) {
-      firstChild.classList.add("no-bottom-left-radius");
-    }
+    // Get the <th> elements
+    const firstHeader = leaderboardTable.querySelector("th:first-child");
+    const lastHeader = leaderboardTable.querySelector("th:last-child");
 
-    if (lastChild) {
-      lastChild.classList.add("no-bottom-right-radius");
+    // Check if tbody has children (rows)
+    if (tbody && tbody.children.length > 0) {
+        // Remove border-radius for the first and last <th> elements
+        firstHeader.classList.add("no-bottom-left-radius");
+        lastHeader.classList.add("no-bottom-right-radius");
+    } else {
+        // Add border-radius back if there are no rows in the tbody
+        firstHeader.classList.remove("no-bottom-left-radius");
+        lastHeader.classList.remove("no-bottom-right-radius");
     }
-  }
 }
 
 // Add the required styles in CSS
@@ -174,8 +178,17 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Call the function to adjust the styles
+// Call the function initially and on any update to the table
 adjustTableHeaderRadius();
+
+// Example: If you dynamically add rows, you can call the function again
+document.querySelector("#addRowButton").addEventListener("click", () => {
+    const tbody = document.querySelector("#leaderboard tbody");
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = "<td>4</td><td>New Player</td><td>200</td>";
+    tbody.appendChild(newRow);
+    adjustTableHeaderRadius(); // Recheck after adding a row
+});
 
   </script>
   
