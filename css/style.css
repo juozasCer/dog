@@ -400,12 +400,12 @@ header {
 
 #leaderboard th:first-child {
   border-top-left-radius: 20px; /* Round top-left corner of header */
-  border-bottom-left-radius: 20px;
+  /* border-bottom-left-radius: 20px; */
 }
 
 #leaderboard th:last-child {
   border-top-right-radius: 20px; /* Round top-right corner of header */
-  border-bottom-right-radius: 20px;
+  /* border-bottom-right-radius: 20px; */
 }
 
 /* Remove unnecessary rounding for all tds */
