@@ -146,7 +146,25 @@
         console.error('Failed to copy text: ', err);
       });
     }
-    
+    function adjustHeaderCorners() {
+      var tbody = document.querySelector('#leaderboard tbody');
+      var trChildren = tbody.querySelectorAll('tr');
+      var thFirstChild = document.querySelector('#leaderboard th:first-child');
+      var thLastChild = document.querySelector('#leaderboard th:last-child');
+
+      if (trChildren.length > 0) {
+        // Remove bottom border radius when tbody has rows
+        thFirstChild.style.borderBottomLeftRadius = '0';
+        thLastChild.style.borderBottomRightRadius = '0';
+      } else {
+        // Restore bottom border radius when tbody is empty
+        thFirstChild.style.borderBottomLeftRadius = '20px';
+        thLastChild.style.borderBottomRightRadius = '20px';
+      }
+    }
+
+    // Call the function on page load
+    adjustHeaderCorners();
   </script>
   
 </body>
