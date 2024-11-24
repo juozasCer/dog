@@ -482,7 +482,7 @@ footer {
   }
 
   #gameArea, #leaderboardSection, #nameInputSection {
-    width: 90%;
+    width: 100%;
   }
 
   .above-game-text {
@@ -545,11 +545,11 @@ footer {
     border: 1px solid #ddd;
     border-radius: 5px;
     /* width: 80%; */
-    bottom: 160px;
+    bottom: 100px;
     left: -70px;
     position: absolute;
 }
-#setNameButton {
+/* #setNameButton {
   margin-top: 10px;
   padding: 10px 20px;
   font-size: 16px;
@@ -560,5 +560,48 @@ footer {
   cursor: pointer;
   top: -115px;
   position: relative;
+} */
+.section {
+  position: relative;
+  height: 110vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-sizing: border-box;
+  padding: 20px;
+}
+#section2 {
+  position: relative;
+  height: 200vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-sizing: border-box;
+  padding: 20px;
+  z-index: 0;
+  background-color: #f0f0f0;
+}
+.game-leaderboard-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  /* width: 100%; */
+  gap: 20px;
+  position: relative;
+  /* top: 50px; */
+}
+#gameArea {
+  position: relative;
+  /* width: 50vw; */
+  height: 100vh;
+  background-color: #222;
+  overflow: hidden;
+  border-radius: 20px;
+  background-image: url(/images/GAMEBG.png);
+  background-size: auto 540px;
+  animation: scrollBackground 10s linear infinite;
+  z-index: 1;
 }
 }
