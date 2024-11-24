@@ -209,25 +209,6 @@ function fetchLeaderboard() {
                 `;
                 leaderboardTable.appendChild(row);
             });
-            adjustHeaderCorners();
         })
         .catch(error => console.error('Error:', error));
-}
-function adjustHeaderCorners() {
-    var tbody = document.querySelector('#leaderboard tbody');
-    var trChildren = tbody.querySelectorAll('tr');
-    var thFirstChild = document.querySelector('#leaderboard th:first-child');
-    var thLastChild = document.querySelector('#leaderboard th:last-child');
-
-    console.log('Number of rows in tbody:', trChildren.length);
-
-    if (trChildren.length > 0) {
-        // Remove bottom border radius when tbody has rows
-        thFirstChild.style.borderBottomLeftRadius = '0px';
-        thLastChild.style.borderBottomRightRadius = '0px';
-    } else {
-        // Restore bottom border radius when tbody is empty
-        thFirstChild.style.borderBottomLeftRadius = '20px';
-        thLastChild.style.borderBottomRightRadius = '20px';
-    }
 }
