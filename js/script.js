@@ -209,6 +209,7 @@ function fetchLeaderboard() {
                 `;
                 leaderboardTable.appendChild(row);
             });
+            adjustHeaderCorners();
         })
         .catch(error => console.error('Error:', error));
 }
