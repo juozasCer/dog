@@ -173,7 +173,7 @@ header {
   border-radius: 10px;
   border: 1px solid #ccc;
   position: relative;
-  max-width: 60vw;
+  /* max-width: 60vw; */
   box-sizing: border-box;
 }
 
@@ -300,6 +300,8 @@ header {
   /* width: 100%; */
   /* max-width: 1200px; Adjust as needed */
   gap: 20px; /* Space between game area and leaderboard */
+  position: relative;
+  top: 50px;
 }
 
 /* Game Area Styles */
@@ -482,8 +484,39 @@ footer {
   #gameArea, #leaderboardSection, #nameInputSection {
     width: 90%;
   }
+
+  .above-game-text {
+    font-size: 50px;
+    color: white;
+    line-height: 1;
+    text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000, -4px 0 0 #000, 4px 0 0 #000, 0 -4px 0 #000, 0 4px 0 #000;
+    font-weight: 400;
+}
+.logo {
+  font-size: 120px;
+  margin-bottom: 20px;
+  color: white;
+  display: inline-block;
+  text-align: center;
+  line-height: 0.85;
+  letter-spacing: -5px;
+  font-weight: 400;
+  text-shadow: -4px -4px 0 #000, 4px -4px 0 #000, -4px 4px 0 #000, 4px 4px 0 #000, -4px 0 0 #000, 4px 0 0 #000, 0 -4px 0 #000, 0 4px 0 #000;
 }
 
+.contact-info {
+  display: flex;
+  align-items: center;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2);
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  position: relative;
+  /* max-width: 1000vw; */
+  box-sizing: border-box;
+  scale: 0.36;
+}
+}
 /* Separator Styles */
 .separator {
   height: 101px; /* Adjust height based on your image */
@@ -504,4 +537,28 @@ footer {
   to {
     background-position: 100% 0; /* End position */
   }
+}
+@media (max-width: 320px) {
+  #playerName {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    /* width: 80%; */
+    bottom: 160px;
+    left: -70px;
+    position: absolute;
+}
+#setNameButton {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  background: linear-gradient(225deg, #10E6C2, #7D46F2);
+  border: none;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  top: -115px;
+  position: relative;
+}
 }
