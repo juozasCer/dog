@@ -146,50 +146,6 @@
         console.error('Failed to copy text: ', err);
       });
     }
-    function adjustTableHeaderRadius() {
-    const leaderboardTable = document.querySelector("#leaderboard");
-    const tbody = leaderboardTable.querySelector("tbody");
-
-    // Get the <th> elements
-    const firstHeader = leaderboardTable.querySelector("th:first-child");
-    const lastHeader = leaderboardTable.querySelector("th:last-child");
-
-    // Check if tbody has children (rows)
-    if (tbody && tbody.children.length > 0) {
-        // Remove border-radius for the first and last <th> elements
-        firstHeader.classList.add("no-bottom-left-radius");
-        lastHeader.classList.add("no-bottom-right-radius");
-    } else {
-        // Add border-radius back if there are no rows in the tbody
-        firstHeader.classList.remove("no-bottom-left-radius");
-        lastHeader.classList.remove("no-bottom-right-radius");
-    }
-}
-
-// Add the required styles in CSS
-const style = document.createElement("style");
-style.textContent = `
-  .no-bottom-left-radius {
-    border-bottom-left-radius: 0 !important;
-  }
-  .no-bottom-right-radius {
-    border-bottom-right-radius: 0 !important;
-  }
-`;
-document.head.appendChild(style);
-
-// Call the function initially and on any update to the table
-adjustTableHeaderRadius();
-
-// Example: If you dynamically add rows, you can call the function again
-document.querySelector("#addRowButton").addEventListener("click", () => {
-    const tbody = document.querySelector("#leaderboard tbody");
-    const newRow = document.createElement("tr");
-    newRow.innerHTML = "<td>4</td><td>New Player</td><td>200</td>";
-    tbody.appendChild(newRow);
-    adjustTableHeaderRadius(); // Recheck after adding a row
-});
-
   </script>
   
 </body>
